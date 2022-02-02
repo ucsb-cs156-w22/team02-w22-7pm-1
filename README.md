@@ -1,3 +1,4 @@
+[![codecov](https://codecov.io/gh/ucsb-cs156-w22/team02-w22-7pm-1/branch/main/graph/badge.svg?token=VTzUzcfxqP)](https://codecov.io/gh/ucsb-cs156-w22/team02-w22-7pm-1)
 # starter-team02: dsre-v2
 
 - Production deployment:<https://w22-7pm-1-team02.herokuapp.com>
