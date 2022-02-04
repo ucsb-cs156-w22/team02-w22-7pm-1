@@ -23,8 +23,8 @@ public class UCSBSubject {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  private String subjectCode; //ex: added this 
-  private String subjectTranslation; //ex: added this
+  private String subjectCode;  
+  private String subjectTranslation; 
   private String deptCode;
   private String collegeCode;
   private String relatedDeptCode;
