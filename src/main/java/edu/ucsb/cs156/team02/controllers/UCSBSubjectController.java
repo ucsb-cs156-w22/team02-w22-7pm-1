@@ -33,6 +33,15 @@ import java.util.Optional;
 @RestController
 @Slf4j
 public class UCSBSubjectController extends ApiController {
+    public class UCSBSubjectError {
+        Long id;
+        UCSBSubject ucsbSubject;
+        ResponseEntity<String> error;
+
+        public UCSBSubjectError(Long id) {
+            this.id = id;
+        }
+    }
 
     @Autowired
     UCSBSubjectRepository UCSBSubjectRepository;
@@ -77,6 +86,39 @@ public class UCSBSubjectController extends ApiController {
         ucsbSubject.setInactive(inactive);
         UCSBSubject saveducsbSubject = UCSBSubjectRepository.save(ucsbSubject);
         return saveducsbSubject;
+    }
+
+    public UCSBSubjectError doesUCSBSubjectExist(UCSBSubjectError ucsbError) {
+
+        Optional<UCSBSubject> optionalUCSBSubject = UCSBSubjectRepository.findBySubjectCode(ucsbError.id);
+
+        if (optionalUCSBSubject.isEmpty()) {
+            ucsbError.error = ResponseEntity
+                    .badRequest()
+                    .body(String.format("id %d not found", ucsbError.id));
+        } else {
+            ucsbError.todo = optionalUCSBSubject.get();
+        }
+        return ucsbError;
+    }
+
+    // make it work for not just admins
+    @ApiOperation(value = "Get a single todo (no matter who it belongs to, admin only)")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/admin")
+    public ResponseEntity<String> getUCSBSubjectID_admin(
+            @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
+        loggingService.logMethod();
+
+        UCSBSubjectError ucsbError = new UCSBSubjectError(id);
+
+        ucsbError = doesUCSBSubjectExist(ucsbError);
+        if (ucsbError.error != null) {
+            return ucsbError.error;
+        }
+
+        String body = mapper.writeValueAsString(ucsbError.todo);
+        return ResponseEntity.ok().body(body);
     }
 
 }
