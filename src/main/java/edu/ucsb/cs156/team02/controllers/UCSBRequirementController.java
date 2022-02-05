@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Optional;
 
-@Api(description = "UCSB Requirements")
+@Api(description = "UCSBRequirements")
 @RequestMapping("/api/UCSBRequirements")
 @RestController
 @Slf4j
@@ -39,6 +39,7 @@ public class UCSBRequirementController extends ApiController {
      * along with the error messages pertaining to those situations. It
      * bundles together the state needed for those checks.
      */
+/*     
     public class UCSBRequirementOrError {
         Long id;
         UCSBRequirement ucsbRe;
@@ -48,7 +49,7 @@ public class UCSBRequirementController extends ApiController {
             this.id = id;
         }
     }
-
+*/
     @Autowired
     UCSBRequirementRepository ucsbRequirementRepository;
 
@@ -68,7 +69,6 @@ public class UCSBRequirementController extends ApiController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/post")
     public UCSBRequirement postUCSBRequirement(
-            @ApiParam("id") @RequestParam long id,
             @ApiParam("requirementCode") @RequestParam String requirementCode,
             @ApiParam("requirementTranslation") @RequestParam String requirementTranslation,
             @ApiParam("collegeCode") @RequestParam String collegeCode,
@@ -79,7 +79,6 @@ public class UCSBRequirementController extends ApiController {
         loggingService.logMethod();
 
         UCSBRequirement ucsbReq = new UCSBRequirement();
-        ucsbReq.setId(id);
         ucsbReq.setRequirementCode(requirementCode);
         ucsbReq.setRequirementTranslation(requirementTranslation);
         ucsbReq.setCollegeCode(collegeCode);

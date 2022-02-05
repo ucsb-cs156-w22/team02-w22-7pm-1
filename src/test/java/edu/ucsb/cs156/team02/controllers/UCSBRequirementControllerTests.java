@@ -63,4 +63,37 @@ public class UCSBRequirementControllerTests extends ControllerTestCase {
                 .andExpect(status().is(403));
     }
 
+    @WithMockUser(roles = { "USER" })
+    @Test
+    public void api_UCSBRequirements_post__user_logged_in() throws Exception {
+        // arrange
+
+        //User u = currentUserService.getCurrentUser().getUser();
+
+        UCSBRequirement expectedUCSBRequirement = UCSBRequirement.builder()
+                .id(0L)
+                .requirementCode("Test RequirementCode")
+                .requirementTranslation("Test RequirementTranslation")
+                .collegeCode("Test CollegeCode")
+                .objCode("Test ObjCode")
+                .courseCount(1)
+                .units(4)
+                .inactive(true)
+                .build();
+
+        when(ucsbRequirementRepository.save(eq(expectedUCSBRequirement))).thenReturn(expectedUCSBRequirement);
+
+        // act
+        MvcResult response = mockMvc.perform(
+                post("/api/UCSBRequirements/post?requirementCode=Test RequirementCode&requirementTranslation=Test RequirementTranslation&collegeCode=Test CollegeCode&objCode=Test ObjCode&courseCount=1&units=4&inactive=true")
+                        .with(csrf()))
+                .andExpect(status().isOk()).andReturn();
+
+        // assert
+        verify(ucsbRequirementRepository, times(1)).save(expectedUCSBRequirement);
+        String expectedJson = mapper.writeValueAsString(expectedUCSBRequirement);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(expectedJson, responseString);
+    }
+
 }
