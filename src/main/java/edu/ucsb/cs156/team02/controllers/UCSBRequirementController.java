@@ -39,7 +39,7 @@ public class UCSBRequirementController extends ApiController {
      * along with the error messages pertaining to those situations. It
      * bundles together the state needed for those checks.
      */
-/*     
+
     public class UCSBRequirementOrError {
         Long id;
         UCSBRequirement ucsbRe;
@@ -49,7 +49,7 @@ public class UCSBRequirementController extends ApiController {
             this.id = id;
         }
     }
-*/
+
     @Autowired
     UCSBRequirementRepository ucsbRequirementRepository;
 
@@ -88,5 +88,37 @@ public class UCSBRequirementController extends ApiController {
         ucsbReq.setInactive(inactive);
         UCSBRequirement savedUCSBRequirement = ucsbRequirementRepository.save(ucsbReq);
         return savedUCSBRequirement;
+    }
+
+    @ApiOperation(value = "Get a single UCSBRequirement")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("")
+    public ResponseEntity<String> getUCSBRequirementById(
+            @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
+        loggingService.logMethod();
+        UCSBRequirementOrError roe = new UCSBRequirementOrError(id);
+
+        roe = doesUCSBRequirementExist(roe);
+        if (roe.error != null) {
+            //System.out.printf("id 123 not found");
+            return roe.error;
+        }
+        String body = mapper.writeValueAsString(roe.ucsbRe);
+        return ResponseEntity.ok().body(body);
+    }
+
+
+    public UCSBRequirementOrError doesUCSBRequirementExist(UCSBRequirementOrError roe) {
+
+        Optional<UCSBRequirement> optionalUCSBRequirement = ucsbRequirementRepository.findById(roe.id);
+
+        if (optionalUCSBRequirement.isEmpty()) {
+            roe.error = ResponseEntity
+                    .badRequest()
+                    .body(String.format("UCSB requirement with id %d not found", roe.id));
+        } else {
+            roe.ucsbRe = optionalUCSBRequirement.get();
+        }
+        return roe;
     }
 }
