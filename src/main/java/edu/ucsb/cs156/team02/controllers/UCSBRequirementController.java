@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Optional;
 
-@Api(description = "UCSBRequirements")
+@Api(description = "UCSB Requirement Controller")
 @RequestMapping("/api/UCSBRequirements")
 @RestController
 @Slf4j
