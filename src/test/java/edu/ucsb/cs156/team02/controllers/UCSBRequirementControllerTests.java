@@ -125,5 +125,23 @@ public class UCSBRequirementControllerTests extends ControllerTestCase {
         String responseString = response.getResponse().getContentAsString();
         assertEquals(expectedJson, responseString);
     }
+    @WithMockUser(roles = { "USER" })
+    @Test
+    public void api_UCSBRequirements__user_logged_in__search_for_UCSBRequirement_that_does_not_exist() throws Exception {
+
+        // arrange
+
+        when(ucsbRequirementRepository.findById(eq(7L))).thenReturn(Optional.empty());
+
+        // act
+        MvcResult response = mockMvc.perform(get("/api/UCSBRequirements?id=7"))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        // assert
+
+        verify(ucsbRequirementRepository, times(1)).findById(eq(7L));
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals("UCSB requirement with id 7 not found", responseString);
+    }
 
 }
