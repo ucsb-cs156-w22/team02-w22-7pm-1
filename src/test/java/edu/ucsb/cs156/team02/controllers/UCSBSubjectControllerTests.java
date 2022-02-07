@@ -70,9 +70,9 @@ public class UCSBSubjectControllerTests extends ControllerTestCase {
         assertEquals(expectedJson, responseString);
     }
 
-    @WithMockUser(roles = { "ADMIN" })
+    @WithMockUser(roles = { "USER" })
     @Test
-    public void api_ucsbsubjects_admin_all__admin_logged_in__returns_all_ucsbsubjects() throws Exception {
+    public void api_ucsbsubjects_all__user_logged_in__returns_all_ucsbsubjects() throws Exception {
 
         // arrange
 
