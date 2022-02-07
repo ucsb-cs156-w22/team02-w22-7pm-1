@@ -120,4 +120,40 @@ public class UCSBSubjectController extends ApiController {
         return ResponseEntity.ok().body(body);
     }
 
+    //FOR TASK FOUR THIS FUNCTION
+    @ApiOperation(value = "Update a single todo (if it belongs to current user)")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("")
+    public ResponseEntity<String> putUCSBSubjectID(
+            @ApiParam("id") @RequestParam Long id,
+            @RequestBody @Valid UCSBSubject incomingUCSBSubject) throws JsonProcessingException {
+        loggingService.logMethod();
+
+        CurrentUser currentUser = getCurrentUser();
+        //User user = currentUser.getUser();    (EX: I DONT THINK WE HAVE A USER ???)
+
+        TodoOrError toe = new TodoOrError(id);
+
+        toe = doesTodoExist(toe);
+        if (toe.error != null) {
+            return toe.error;
+        }
+        toe = doesTodoBelongToCurrentUser(toe);
+        if (toe.error != null) {
+            return toe.error;
+        }
+
+        //incomingTodo.setUser(user);
+        incomingUCSBSubject.setSubjectCode(subjectCode);
+        incomingUCSBSubject.setSubjectTranslation(subjectTranslation);
+        incomingUCSBSubject.setDeptCode(deptCode);
+        incomingUCSBSubject.setCollegeCode(collegeCode);
+        incomingUCSBSubject.setRelatedDeptCode(relatedDeptCode);
+        incomingUCSBSubject.setInactive(inactive);
+        UCSBSubjectRepository.save(incomingUCSBSubject);
+
+        String body = mapper.writeValueAsString(incomingUCSBSubject);
+        return ResponseEntity.ok().body(body);
+    }
+
 }
