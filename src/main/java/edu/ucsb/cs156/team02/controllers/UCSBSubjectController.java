@@ -1,5 +1,6 @@
 package edu.ucsb.cs156.team02.controllers;
 
+import edu.ucsb.cs156.team02.entities.Todo;
 import edu.ucsb.cs156.team02.entities.UCSBSubject;
 import edu.ucsb.cs156.team02.entities.User;
 import edu.ucsb.cs156.team02.models.CurrentUser;
@@ -27,37 +28,39 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Optional;
 
-@Api(description = "UCSBSubjects") // EX: changed this
-@RequestMapping("/api/UCSBSubjects/") // EX:Changed this
+@Api(description = "UCSB Subject Controller")
+@RequestMapping("/api/UCSBSubjects")
 @RestController
 @Slf4j
 public class UCSBSubjectController extends ApiController {
-    public class UCSBSubjectError {
+
+    public class UCSBSubjectOrError {
         Long id;
         UCSBSubject ucsbSubject;
         ResponseEntity<String> error;
 
-        public UCSBSubjectError(Long id) {
+        public UCSBSubjectOrError(Long id) {
             this.id = id;
         }
     }
 
     @Autowired
-    UCSBSubjectRepository UCSBSubjectRepository;
+    UCSBSubjectRepository ucsbSubjectRepository;
 
     @Autowired
     ObjectMapper mapper;
 
-    @ApiOperation(value = "List all subjects")
+    @ApiOperation(value = "List all UCSB Subjects")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/all")
-    public Iterable<UCSBSubject> allUCSBSubject() {
+    public Iterable<UCSBSubject> allUCSBSubjects() {
         loggingService.logMethod();
-        Iterable<UCSBSubject> UCSBSubjects = UCSBSubjectRepository.findAll();
+        Iterable<UCSBSubject> UCSBSubjects = ucsbSubjectRepository.findAll();
         return UCSBSubjects;
     }
 
-    // EX: FEELING CONFIDENT THIS METHOD WORKS
-    @ApiOperation(value = "Create a new subject JSON object")
+    @ApiOperation(value = "Create a new UCSB Subject JSON Object")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/post")
     public UCSBSubject postUCSBSubject(
             @ApiParam("subjectCode") @RequestParam String subjectCode,
@@ -83,42 +86,41 @@ public class UCSBSubjectController extends ApiController {
         ucsbSubject.setCollegeCode(collegeCode);
         ucsbSubject.setRelatedDeptCode(relatedDeptCode);
         ucsbSubject.setInactive(inactive);
-        UCSBSubject saveducsbSubject = UCSBSubjectRepository.save(ucsbSubject);
+        UCSBSubject saveducsbSubject = ucsbSubjectRepository.save(ucsbSubject);
         return saveducsbSubject;
     }
 
-    public UCSBSubjectError doesUCSBSubjectExist(UCSBSubjectError ucsbError) {
-
-        Optional<UCSBSubject> optionalUCSBSubject = UCSBSubjectRepository.findBySubjectCode(ucsbError.id);
-
-        if (optionalUCSBSubject.isEmpty()) {
-            ucsbError.error = ResponseEntity
-                    .badRequest()
-                    .body(String.format("id %d not found", ucsbError.id));
-        } else {
-            ucsbError.todo = optionalUCSBSubject.get();
-        }
-        return ucsbError;
-    }
-
-    // make it work for not just admins
-    @ApiOperation(value = "Get a single todo (no matter who it belongs to, admin only)")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/admin")
-    public ResponseEntity<String> getUCSBSubjectID_admin(
+    @ApiOperation(value = "Get a single UCSBSubject")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("")
+    public ResponseEntity<String> getUCSBSubjectById(
             @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
         loggingService.logMethod();
+        UCSBSubjectOrError roe = new UCSBSubjectOrError(id);
 
-        UCSBSubjectError ucsbError = new UCSBSubjectError(id);
+        roe = doesUCSBSubjectExist(roe);
+        if (roe.error != null) {
 
-        ucsbError = doesUCSBSubjectExist(ucsbError);
-        if (ucsbError.error != null) {
-            return ucsbError.error;
+            return roe.error;
         }
-
-        String body = mapper.writeValueAsString(ucsbError.todo);
+        String body = mapper.writeValueAsString(roe.ucsbSubject);
         return ResponseEntity.ok().body(body);
     }
+
+    public UCSBSubjectOrError doesUCSBSubjectExist(UCSBSubjectOrError roe) {
+
+        Optional<UCSBSubject> optionalUCSBSubject = ucsbSubjectRepository.findById(roe.id);
+
+        if (optionalUCSBSubject.isEmpty()) {
+            roe.error = ResponseEntity
+                    .badRequest()
+                    .body(String.format("id %d not found", roe.id));
+        } else {
+            roe.ucsbSubject = optionalUCSBSubject.get();
+        }
+        return roe;
+    }
+<<<<<<< HEAD
 
     //FOR TASK FOUR THIS FUNCTION (EX)
     @ApiOperation(value = "Update a single todo (if it belongs to current user)")
@@ -156,4 +158,6 @@ public class UCSBSubjectController extends ApiController {
         return ResponseEntity.ok().body(body);
     }
 
+=======
+>>>>>>> 8f855479d4f04e5e555d6796f8a86e41bf0347b5
 }
