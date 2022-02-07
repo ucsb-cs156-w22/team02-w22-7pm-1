@@ -91,7 +91,11 @@ public class UCSBSubjectController extends ApiController {
     }
 
     @ApiOperation(value = "Get a single UCSBSubject")
+<<<<<<< HEAD
     // @PreAuthorize("hasRole('ROLE_USER')")
+=======
+    //@PreAuthorize("hasRole('ROLE_USER')")
+>>>>>>> 3981bc669a8f99f56e7ed032967ae045e70ed2a8
     @GetMapping("")
     public ResponseEntity<String> getUCSBSubjectById(
             @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
@@ -120,4 +124,37 @@ public class UCSBSubjectController extends ApiController {
         }
         return roe;
     }
+
+    //FOR TASK FOUR THIS FUNCTION (EX)
+    @ApiOperation(value = "Update a single subject by ID)")
+    //@PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("")
+    public ResponseEntity<String> putUCSBSubjectID(
+            @ApiParam("id") @RequestParam Long id,
+            @RequestBody @Valid UCSBSubject incomingUCSBSubject) throws JsonProcessingException {
+        loggingService.logMethod();
+
+        //CurrentUser currentUser = getCurrentUser();
+        //User user = currentUser.getUser();    (EX: I DONT THINK WE HAVE A USER ???)
+
+        UCSBSubjectOrError ucsbSubError = new UCSBSubjectOrError(id);
+
+        ucsbSubError = doesUCSBSubjectExist(ucsbSubError);
+        if (ucsbSubError.error != null) {
+            return ucsbSubError.error;
+        }
+
+        //incomingTodo.setUser(user);
+        // incomingUCSBSubject.setSubjectCode(subjectCode);
+        // incomingUCSBSubject.setSubjectTranslation(subjectTranslation);
+        // incomingUCSBSubject.setDeptCode(deptCode);
+        // incomingUCSBSubject.setCollegeCode(collegeCode);
+        // incomingUCSBSubject.setRelatedDeptCode(relatedDeptCode);
+        // incomingUCSBSubject.setInactive(inactive);
+        ucsbSubjectRepository.save(incomingUCSBSubject);
+
+        String body = mapper.writeValueAsString(incomingUCSBSubject);
+        return ResponseEntity.ok().body(body);
+    }
+
 }
