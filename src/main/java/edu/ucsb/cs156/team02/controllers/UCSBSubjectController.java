@@ -120,7 +120,7 @@ public class UCSBSubjectController extends ApiController {
         return ResponseEntity.ok().body(body);
     }
 
-    //FOR TASK FOUR THIS FUNCTION
+    //FOR TASK FOUR THIS FUNCTION (EX)
     @ApiOperation(value = "Update a single todo (if it belongs to current user)")
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("")
@@ -132,15 +132,15 @@ public class UCSBSubjectController extends ApiController {
         CurrentUser currentUser = getCurrentUser();
         //User user = currentUser.getUser();    (EX: I DONT THINK WE HAVE A USER ???)
 
-        TodoOrError toe = new TodoOrError(id);
+        UCSBSubjectOrError ucsbSubError = new UCSBSubjectOrError(id);
 
-        toe = doesTodoExist(toe);
-        if (toe.error != null) {
-            return toe.error;
+        ucsbSubError = doesUCSBSubjectExist(ucsbSubError);
+        if (ucsbSubError.error != null) {
+            return ucsbSubError.error;
         }
-        toe = doesTodoBelongToCurrentUser(toe);
-        if (toe.error != null) {
-            return toe.error;
+        ucsbSubError = doesUCSBSubjectBelongToCurrentUser(ucsbSubError);
+        if (ucsbSubError.error != null) {
+            return ucsbSubError.error;
         }
 
         //incomingTodo.setUser(user);
