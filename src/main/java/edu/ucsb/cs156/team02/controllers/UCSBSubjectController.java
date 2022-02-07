@@ -51,7 +51,7 @@ public class UCSBSubjectController extends ApiController {
     ObjectMapper mapper;
 
     @ApiOperation(value = "List all UCSB Subjects")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/all")
     public Iterable<UCSBSubject> allUCSBSubjects() {
         loggingService.logMethod();
@@ -60,7 +60,7 @@ public class UCSBSubjectController extends ApiController {
     }
 
     @ApiOperation(value = "Create a new UCSB Subject JSON Object")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/post")
     public UCSBSubject postUCSBSubject(
             @ApiParam("subjectCode") @RequestParam String subjectCode,
@@ -114,7 +114,7 @@ public class UCSBSubjectController extends ApiController {
         if (optionalUCSBSubject.isEmpty()) {
             roe.error = ResponseEntity
                     .badRequest()
-                    .body(String.format("id %d not found", roe.id));
+                    .body(String.format("subject with id %d not found", roe.id));
         } else {
             roe.ucsbSubject = optionalUCSBSubject.get();
         }
@@ -151,6 +151,24 @@ public class UCSBSubjectController extends ApiController {
 
         String body = mapper.writeValueAsString(incomingUCSBSubject);
         return ResponseEntity.ok().body(body);
+    }
+
+    @ApiOperation(value = "Delete a subject by ID")
+    @DeleteMapping("")
+    public ResponseEntity<String> deleteUCSBSubject(
+            @ApiParam("id") @RequestParam Long id) {
+        loggingService.logMethod();
+
+        UCSBSubjectOrError roe = new UCSBSubjectOrError(id);
+
+        roe = doesUCSBSubjectExist(roe);
+        if (roe.error != null) {
+            return roe.error;
+        }
+
+        ucsbSubjectRepository.deleteById(id);
+        return ResponseEntity.ok().body(String.format("subject with id %d deleted", id));
+
     }
 
 }
