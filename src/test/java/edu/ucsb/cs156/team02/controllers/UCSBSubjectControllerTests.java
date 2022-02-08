@@ -110,178 +110,168 @@ public class UCSBSubjectControllerTests extends ControllerTestCase {
         String responseString = response.getResponse().getContentAsString();
         assertEquals(expectedJson, responseString);
     }
-    //EX:Testing for fourth part to get max test coverage (incomplete)
-//     @WithMockUser(roles = { "USER" })
-//     @Test
-//     public void api_todos__user_logged_in__put_todo() throws Exception {
-//         // arrange
+    // EX:Testing for fourth part to get max test coverage (incomplete)
+    // @WithMockUser(roles = { "USER" })
+    // @Test
+    // public void api_todos__user_logged_in__put_todo() throws Exception {
+    // // arrange
 
-<<<<<<< HEAD
-//         User u = currentUserService.getCurrentUser().getUser();
-//         User otherUser = User.builder().id(999).build();
-//         UCSBSubject ucsbSubject = UCSBSubject.builder().title("Todo 1").details("Todo 1").done(false).user(u).id(67L).build();
-//         // We deliberately set the user information to another user
-//         // This shoudl get ignored and overwritten with currrent user when todo is saved
+    // User u = currentUserService.getCurrentUser().get
+    // User otherUser = User.builder().id(999).build();
+    // UCSBSubject ucsbSubject = UCSBSubject.builder().title("Todo 1").details("Todo
+    // 1").done(false).user(u).id(67L).build();
+    // // We deliberately set the user information to another user
+    //
 
-//         UCSBSubject updatedSubject = UCSBSubject.builder().title("New Title").details("New Details").done(true).user(otherUser).id(67L).build();
-//         UCSBSubject correctSubject = UCSBSubject.builder().title("New Title").details("New Details").done(true).user(u).id(67L).build();
+    // UCSBSubject correctSubject = UCSBSubject.builder().title("New
+    // Title").details("New Details").done(true).user(u)
+    // .id(67L).build();
 
-//         String requestBody = mapper.writeValueAsString(updatedSubject);
-//         String expectedReturn = mapper.writeValueAsString(correctSubject);
+    // // String requestBody = mapper.writeValueAsString(updatedSubject);
+    // // String expectedReturn = mapper.writeValueAsString(correctSubje
 
-//         when(ucsbSubjectRepository.findById(eq(67L))).thenReturn(Optional.of(ucsbSubject));
+    // when(ucsbSubjectRepository.findById(eq(67L))).thenReturn(Optional.of(ucsbSubject));
 
-//         // act
-//         MvcResult response = mockMvc.perform(
-//                 put("/api/UCSBSubjects?id=67")
-//                         .contentType(MediaType.APPLICATION_JSON)
-//                         .characterEncoding("utf-8")
-//                         .content(requestBody)
-//                         .with(csrf()))
-//                 .andExpect(status().isOk()).andReturn();
+    // // // act
+    // // MvcResult response = mockMvc.perform(
+    // // put("/api/UCSBSubjects?id=67")
+    // // .contentType(MediaType.APPLICATION_JSON)
+    // // .characterEncoding("utf-8")
+    // // .content(requestBody)
+    // // .with(csrf()))
+    // // .andExpect(status().isOk()).andReturn();
 
-//         // assert
-//         verify(ucsbSubjectRepository, times(1)).findById(67L);
-//         verify(ucsbSubjectRepository, times(1)).save(correctSubject); // should be saved with correct user
-//         String responseString = response.getResponse().getContentAsString();
-//         assertEquals(expectedReturn, responseString);
-//     }
-        @Test
-        public void api_reqs__delete_req() throws Exception {
+    // // // assert
+    // //
 
-        // arrange
+    // verify(ucsbSubjectRepository, times(1)).save(correctSubject); // should be
+    // saved with correct user
+    // // String responseString = response.getResponse().getContentAsString();
+    // // assertEquals(expectedReturn, responseString);
+    // // }
 
-        UCSBSubject req1 = UCSBSubject.builder()
-            .subjectCode("subjectCode")
-            .subjectTranslation("subjectTranslation")
-            .collegeCode("collegeCode")
-            .deptCode("deptCode")
-            .collegeCode("collegeCode")
-            .relatedDeptCode("relatedDeptCode")
-            .inactive(false)
-            .id(123L).build();
+    // @Test
+    // public void api_reqs__delete_req() throws Exception {
 
-        when(ucsbSubjectRepository.findById(eq(123L))).thenReturn(Optional.of(req1));
+    // // arrange
 
-        // act
+    // UCSBSubject req1 = UCSBSubject.builder()
+    // .subjectCode("subjectCode")
+    // .subjectTranslation("subjectTranslation")
+    // .collegeCode("collegeCode")
+    // .deptCode("deptCode")
+    // .collegeCode("collegeCode")
+    // .relatedDeptCode("relatedDeptCode")
+    // .inactive(false)
+    // .id(123L).build();
 
-        MvcResult response = mockMvc.perform(
-            delete("/api/UCSBSubjects?id=123")
-                    .with(csrf()))
-            .andExpect(status().isOk()).andReturn();
+    // when(ucsbSubjectRepository.findById(eq(123L))).thenReturn(Optional.of(req1));
 
-         // assert
+    // // act
 
-        verify(ucsbSubjectRepository, times(1)).findById(123L);
-        verify(ucsbSubjectRepository, times(1)).deleteById(123L);
-        String responseString = response.getResponse().getContentAsString();
-        assertEquals("subject with id 123 deleted", responseString);
-        }
+    // delete("/api/UCSBSubjects?id=123")
+    // .with(csrf()))
+    // .andExpect(status().isOk()).andReturn();
 
-        @Test
-        public void api_reqs__delete_req_that_does_not_exist() throws Exception {
+    // // assert
 
-        // arrange
+    // verify(ucsbSubjectRepository, times(1)).findById(123L);
+    // verify(ucsbSubjectRepository, times(1)).deleteById(123L);
+    // String responseString = response.getResponse().getContentAsString();
+    // assertEquals("subject with id 123 deleted", responseString);
+    // }
 
-         when(ucsbSubjectRepository.findById(eq(123L))).thenReturn(Optional.empty());
+    // @Test
+    // public void api_reqs__delete_req_that_does_not_exist() throws Exception {
 
-         // act
+    // // arrange
 
-         MvcResult response = mockMvc.perform(
-            delete("/api/UCSBSubjects?id=123")
-                    .with(csrf()))
-            .andExpect(status().isBadRequest()).andReturn();
+    // when(ucsbSubjectRepository.findById(eq(123L))).thenReturn(Optional.empty());
 
-        // assert
+    // MvcResult response = mockMvc.perform(
+    // delete("/api/UCSBSubjects?id=123")
+    // .with(csrf()))
+    // .andExpect(status().isBadRequest()).andReturn();
 
-        verify(ucsbSubjectRepository, times(1)).findById(123L);
-        String responseString = response.getResponse().getContentAsString();
-        assertEquals("subject with id 123 not found", responseString);
-        }
+    // // assert
 
-        @Test
-        public void api_reqs__put_req() throws Exception {
+    // verify(ucsbSubjectRepository, times(1)).findById(123L);
+    // String responseString = response.getResponse().getContentAsString();
+    // assertEquals("subject with id 123 not found", responseString);
+    // }
 
-        // arrange
+    // @Test
+    // public void api_reqs__put_req() throws Exception {
 
-        UCSBSubject initialReq = UCSBSubject.builder()
-                .subjectCode("subjectCode")
-                .subjectTranslation("subjectTranslation")
-                .collegeCode("collegeCode")
-                .deptCode("deptCode")
-                .collegeCode("collegeCode")
-                .relatedDeptCode("relatedDeptCode")
-                .inactive(false)
-                .id(123L).build();
+    // // arrange
 
-        UCSBSubject updatedReq = UCSBSubject.builder()
-                .subjectCode("new subjectCode")
-                .subjectTranslation("new subjectTranslation")
-                .collegeCode("new collegeCode")
-                .deptCode("new deptCode")
-                .collegeCode("new collegeCode")
-                .relatedDeptCode("new relatedDeptCode")
-                .inactive(true)
-                .id(123L).build();
+    // UCSBSubject initialReq = UCSBSubject.builder()
+    // .subjectCode("subjectCode")
+    // .subjectTranslation("subjectTranslation")
+    // .collegeCode("collegeCode")
+    // .deptCode("deptCode")
+    // .collegeCode("collegeCode")
+    // .relatedDeptCode("relatedDeptCode")
+    // .inactive(false)
+    // .id(123L).build();
 
-        String requestBody = mapper.writeValueAsString(updatedReq);
-        String expectedReturn = mapper.writeValueAsString(updatedReq);
+    // UCSBSubject updatedReq = UCSBSubject.builder()
+    // .subjectCode("new subjectCode")
+    // .subjectTranslation("new subjectTranslation")
+    // .collegeCode("new collegeCode")
+    // .deptCode("new deptCode")
+    // .collegeCode("new collegeCode")
+    // .relatedDeptCode("new relatedDeptCode")
+    // .inactive(true)
+    // .id(123L).build();
 
-        when(ucsbSubjectRepository.findById(eq(123L))).thenReturn(Optional.of(initialReq));
+    // String expectedReturn = mapper.writeValueAsString(updatedReq);
 
-         // act
+    // when(ucsbSubjectRepository.findById(eq(123L))).thenReturn(Optional.of(initialReq));
 
-        MvcResult response = mockMvc.perform(
-            put("/api/UCSBSubjects?id=123")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .characterEncoding("utf-8")
-                    .content(requestBody)
-                    .with(csrf()))
-            .andExpect(status().isOk()).andReturn();
+    // // act
 
-        // assert
+    // MvcResult response = mockMvc.perform(
+    // put("/api/UCSBSubjects?id=123")
+    // .contentType(MediaType.APPLICATION_JSON)
+    // .characterEncoding("utf-8")
+    // .content(requestBody)
+    // .with(csrf()))
+    // .andExpect(status().isOk()).andReturn();
 
-        verify(ucsbSubjectRepository, times(1)).findById(123L);
-        verify(ucsbSubjectRepository, times(1)).save(updatedReq);
-        String responseString = response.getResponse().getContentAsString();
-        assertEquals(expectedReturn, responseString);
-        }
+    // // assert
 
-        @Test
-        public void api_reqs__cannot_put_req_that_does_not_exist() throws Exception {
+    // verify(ucsbSubjectRepository, times(1)).findById(123L);
+    // verify(ucsbSubjectRepository, times(1)).save(updatedReq);
+    // String responseString = response.getResponse().getContentAsString();
+    // assertEquals(expectedReturn, responseString);
+    // }
 
-        // arrange
+    // @Test
 
-        UCSBSubject updatedReq = UCSBSubject.builder()
-                .subjectCode("new subjectCode")
-                .subjectTranslation("new subjectTranslation")
-                .collegeCode("new collegeCode")
-                .deptCode("new deptCode")
-                .collegeCode("new collegeCode")
-                .relatedDeptCode("new relatedDeptCode")
-                .inactive(true)
-                .id(123L).build();
+    // // arrange
 
-        String requestBody = mapper.writeValueAsString(updatedReq);
+    // UCSBSubject updtdeq = USB
 
-        when(ucsbSubjectRepository.findById(eq(123L))).thenReturn(Optional.empty());
+    // .collegeCode("new collegeCode.relatedDeptCode(".inactive(true).id(123L)
 
-        // act
-        MvcResult response = mockMvc.perform(
-            put("/api/UCSBSubjects?id=123")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .characterEncoding("utf-8")
-                    .content(requestBody)
-                    .with(csrf()))
-            .andExpect(status().isBadRequest()).andReturn();
+    // when(ucsbSubjectRepository.findById(eq(123L))).thenReturn(Optional.empty());
 
-        // assert
-        verify(ucsbSubjectRepository, times(1)).findById(123L);
-         String responseString = response.getResponse().getContentAsString();
-        assertEquals("subject with id 123 not found", responseString);
-}
-}
-=======
+    // // act
+
+    // put("/api/UCSBSubjects?id=123")
+    // .contentType(MediaType.APPLICATION_JSON)
+    // .characterEncoding("utf-8")
+    // .content(requestBody)
+    // .with(csrf()))
+    // .andExpect(status().isBadRequest()).andReturn();
+
+    // // assert
+    // verify(ucsbSubjectRepository, times(1)).findById(123L);
+    // String responseString = response.getResponse().getContentAsString();
+
+    // assertEquals("subject with id 123 not found", responseString);
+
     // FIX FROM HERE
 
     @WithMockUser(roles = { "USER" })
@@ -293,15 +283,21 @@ public class UCSBSubjectControllerTests extends ControllerTestCase {
                 .deptCode("false")
                 .collegeCode("u1").relatedDeptCode("1L").inactive(true)
                 .build();
-        when(ucsbSubjectRepository.findById(eq(1L))).thenReturn(Optional.of(ucsbSubject77));
 
         // act
-        MvcResult response = mockMvc.perform(get("/api/UCSBSubjects?id=1"))
-                .andExpect(status().isOk()).andReturn();
+        String expectedJson = mapper.writeValueAsString(ucsbSubject77);
+        MvcResult response = mockMvc.perform(
+
+                get("/api/UCSBSubjects?id=1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(expectedJson)
+                        .with(csrf()))
+                .andExpect(status().isBadRequest()).andReturn();
         // assert
 
         verify(ucsbSubjectRepository, times(1)).findById(eq(1L));
-        String expectedJson = mapper.writeValueAsString(ucsbSubject77);
+
         String responseString = response.getResponse().getContentAsString();
         assertEquals(expectedJson, responseString);
     }
@@ -315,13 +311,17 @@ public class UCSBSubjectControllerTests extends ControllerTestCase {
         when(ucsbSubjectRepository.findById(eq(1L))).thenReturn(Optional.empty());
 
         // act
-        MvcResult response = MockMvc.perform(get("/api/UCSBSubjects?id=1"))
+        MvcResult response = mockMvc.perform(
+
+                get("/api/UCSBSubjects?id=1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .with(csrf()))
                 .andExpect(status().isBadRequest()).andReturn();
 
         verify(ucsbSubjectRepository, times(1)).findById(eq(1L));
         String responseString = response.getResponse().getContentAsString();
-        assertEquals("UCSB Subject with id 1 not found", responseString);
+        assertEquals("subject with id 1 not found", responseString);
     }
 }
 //
->>>>>>> 1f0f4942f5731920d0f395b046bce1afa0756332
