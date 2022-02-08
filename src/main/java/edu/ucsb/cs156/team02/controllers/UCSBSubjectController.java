@@ -122,7 +122,7 @@ public class UCSBSubjectController extends ApiController {
     }
 
     // FOR TASK FOUR THIS FUNCTION (EX)
-    @ApiOperation(value = "Update a single subject by ID)")
+    @ApiOperation(value = "Update a single subject by ID")
     // @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("")
     public ResponseEntity<String> putUCSBSubjectID(
@@ -140,13 +140,13 @@ public class UCSBSubjectController extends ApiController {
             return ucsbSubError.error;
         }
 
-        // incomingTodo.setUser(user);
-        // incomingUCSBSubject.setSubjectCode(subjectCode);
-        // incomingUCSBSubject.setSubjectTranslation(subjectTranslation);
-        // incomingUCSBSubject.setDeptCode(deptCode);
-        // incomingUCSBSubject.setCollegeCode(collegeCode);
-        // incomingUCSBSubject.setRelatedDeptCode(relatedDeptCode);
-        // incomingUCSBSubject.setInactive(inactive);
+         //incomingTodo.setUser(user);
+        //  incomingUCSBSubject.setSubjectCode(subjectCode);
+        //  incomingUCSBSubject.setSubjectTranslation(subjectTranslation);
+        //  incomingUCSBSubject.setDeptCode(deptCode);
+        //  incomingUCSBSubject.setCollegeCode(collegeCode);
+        //  incomingUCSBSubject.setRelatedDeptCode(relatedDeptCode);
+        //  incomingUCSBSubject.setInactive(inactive);
         ucsbSubjectRepository.save(incomingUCSBSubject);
 
         String body = mapper.writeValueAsString(incomingUCSBSubject);
