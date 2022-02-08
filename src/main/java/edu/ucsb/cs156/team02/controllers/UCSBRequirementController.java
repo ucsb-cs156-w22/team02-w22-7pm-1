@@ -115,10 +115,70 @@ public class UCSBRequirementController extends ApiController {
         if (optionalUCSBRequirement.isEmpty()) {
             roe.error = ResponseEntity
                     .badRequest()
-                    .body(String.format("UCSB requirement with id %d not found", roe.id));
+                    .body(String.format("UCSB Requirement with id %d not found", roe.id));
         } else {
             roe.ucsbRe = optionalUCSBRequirement.get();
         }
         return roe;
     }
+
+
+
+
+    //new adding 
+
+    @ApiOperation(value = "Delete a UCSBRequirment owned by this user")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("")
+    public ResponseEntity<String> deleteUCSBRequirement(
+            @ApiParam("id") @RequestParam Long id) {
+        loggingService.logMethod();
+
+        UCSBRequirementOrError roe = new UCSBRequirementOrError(id);
+
+        roe = doesUCSBRequirementExist(roe);
+        if (roe.error != null) {
+           return roe.error;
+        }
+
+    //this part may need to change 
+
+   
+        ucsbRequirementRepository.deleteById(id);
+        return ResponseEntity.ok().body(String.format("UCSB Requirment with id %d deleted", id));
+
 }
+
+//***************************************   PUT  *********************************** */
+
+@ApiOperation(value = "Update a single UCSB Requirment ")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("")
+    public ResponseEntity<String> putUCSBRequirmentById(
+            @ApiParam("id") @RequestParam Long id ,
+            @RequestBody @Valid UCSBRequirement incomingUCSBReuirement) throws JsonProcessingException{
+        loggingService.logMethod();
+
+ 
+
+        UCSBRequirementOrError roe = new UCSBRequirementOrError(id);
+
+        roe = doesUCSBRequirementExist(roe);
+        if (roe.error != null) {
+            return roe.error;
+        }
+ 
+
+        //incomingTodo.setUser(user);
+        ucsbRequirementRepository.save(incomingUCSBReuirement);
+
+        String body = mapper.writeValueAsString(incomingUCSBReuirement);
+        return ResponseEntity.ok().body(body);
+    }
+
+
+
+
+}
+
+
