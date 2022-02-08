@@ -13,8 +13,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
+import edu.ucsb.cs156.team02.testconfig.TestConfig;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -39,7 +40,7 @@ public class UCSBSubjectControllerTests extends ControllerTestCase {
     @MockBean
     UserRepository userRepository;
 
-    // Authorization tests for /api/todos/admin/all
+    // Authorization tests for /api/UCSBSubjects/all
 
     @WithMockUser(roles = { "USER" })
     @Test
@@ -76,19 +77,19 @@ public class UCSBSubjectControllerTests extends ControllerTestCase {
 
         // arrange
 
-        User u1 = User.builder().id(1L).build();
-        User u2 = User.builder().id(2L).build();
-        User u = currentUserService.getCurrentUser().getUser();
+        // User u1 = User.builder().id(1L).build();
+        // User u2 = User.builder().id(2L).build();
+        // User u = currentUserService.getCurrentUser().getUser();
 
-        UCSBSubject ucsbSubject1 = UCSBSubject.builder().subjectCode("ucsbSubject1").subjectTranslation("Todo 1")
+        UCSBSubject ucsbSubject1 = UCSBSubject.builder().id(0L).subjectCode("ucsbSubject1").subjectTranslation("Todo 1")
                 .deptCode("false")
                 .collegeCode("u1").relatedDeptCode("1L").inactive(true)
                 .build();
-        UCSBSubject ucsbSubject2 = UCSBSubject.builder().subjectCode("ucsbSubject2").subjectTranslation("Todo 2")
+        UCSBSubject ucsbSubject2 = UCSBSubject.builder().id(1L).subjectCode("ucsbSubject2").subjectTranslation("Todo 2")
                 .deptCode("false")
                 .collegeCode("u2").relatedDeptCode("2L").inactive(true)
                 .build();
-        UCSBSubject ucsbSubject3 = UCSBSubject.builder().subjectCode("ucsbSubject3").subjectTranslation("Todo 3")
+        UCSBSubject ucsbSubject3 = UCSBSubject.builder().id(2L).subjectCode("ucsbSubject3").subjectTranslation("Todo 3")
                 .deptCode("false")
                 .collegeCode("u").relatedDeptCode("3L").inactive(true)
                 .build();
@@ -115,6 +116,7 @@ public class UCSBSubjectControllerTests extends ControllerTestCase {
 //     public void api_todos__user_logged_in__put_todo() throws Exception {
 //         // arrange
 
+<<<<<<< HEAD
 //         User u = currentUserService.getCurrentUser().getUser();
 //         User otherUser = User.builder().id(999).build();
 //         UCSBSubject ucsbSubject = UCSBSubject.builder().title("Todo 1").details("Todo 1").done(false).user(u).id(67L).build();
@@ -279,3 +281,47 @@ public class UCSBSubjectControllerTests extends ControllerTestCase {
         assertEquals("subject with id 123 not found", responseString);
 }
 }
+=======
+    // FIX FROM HERE
+
+    @WithMockUser(roles = { "USER" })
+    @Test
+    public void api_UCSBSubjects__user_logged_in__returns_a_UCSBSubject_that_exists() throws Exception {
+
+        UCSBSubject ucsbSubject77 = UCSBSubject.builder().id(1L).subjectCode("ucsbSubject1")
+                .subjectTranslation("Todo 1")
+                .deptCode("false")
+                .collegeCode("u1").relatedDeptCode("1L").inactive(true)
+                .build();
+        when(ucsbSubjectRepository.findById(eq(1L))).thenReturn(Optional.of(ucsbSubject77));
+
+        // act
+        MvcResult response = mockMvc.perform(get("/api/UCSBSubjects?id=1"))
+                .andExpect(status().isOk()).andReturn();
+        // assert
+
+        verify(ucsbSubjectRepository, times(1)).findById(eq(1L));
+        String expectedJson = mapper.writeValueAsString(ucsbSubject77);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(expectedJson, responseString);
+    }
+
+    @WithMockUser(roles = { "USER" })
+    @Test
+    public void api_UCSBSubjects__user_logged_in__search_for_UCSBSubject_that_does_not_exist() throws Exception {
+
+        // arrange
+
+        when(ucsbSubjectRepository.findById(eq(1L))).thenReturn(Optional.empty());
+
+        // act
+        MvcResult response = MockMvc.perform(get("/api/UCSBSubjects?id=1"))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        verify(ucsbSubjectRepository, times(1)).findById(eq(1L));
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals("UCSB Subject with id 1 not found", responseString);
+    }
+}
+//
+>>>>>>> 1f0f4942f5731920d0f395b046bce1afa0756332
