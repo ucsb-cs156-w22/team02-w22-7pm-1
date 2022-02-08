@@ -28,28 +28,39 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Optional;
 
-@Api(description = "UCSBSubjects") // EX: changed this
-@RequestMapping("/api/UCSBSubjects/") // EX:Changed this
+@Api(description = "UCSB Subject Controller")
+@RequestMapping("/api/UCSBSubjects")
 @RestController
 @Slf4j
 public class UCSBSubjectController extends ApiController {
 
+    public class UCSBSubjectOrError {
+        Long id;
+        UCSBSubject ucsbSubject;
+        ResponseEntity<String> error;
+
+        public UCSBSubjectOrError(Long id) {
+            this.id = id;
+        }
+    }
+
     @Autowired
-    UCSBSubjectRepository UCSBSubjectRepository;
+    UCSBSubjectRepository ucsbSubjectRepository;
 
     @Autowired
     ObjectMapper mapper;
 
-    @ApiOperation(value = "List all subjects")
+    @ApiOperation(value = "List all UCSB Subjects")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/all")
-    public Iterable<UCSBSubject> allUCSBSubject() {
+    public Iterable<UCSBSubject> allUCSBSubjects() {
         loggingService.logMethod();
-        Iterable<UCSBSubject> UCSBSubjects = UCSBSubjectRepository.findAll();
+        Iterable<UCSBSubject> UCSBSubjects = ucsbSubjectRepository.findAll();
         return UCSBSubjects;
     }
 
-    // EX: FEELING CONFIDENT THIS METHOD WORKS
-    @ApiOperation(value = "Create a new subject JSON object")
+    @ApiOperation(value = "Create a new UCSB Subject JSON Object")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/post")
     public UCSBSubject postUCSBSubject(
             @ApiParam("subjectCode") @RequestParam String subjectCode,
@@ -75,8 +86,89 @@ public class UCSBSubjectController extends ApiController {
         ucsbSubject.setCollegeCode(collegeCode);
         ucsbSubject.setRelatedDeptCode(relatedDeptCode);
         ucsbSubject.setInactive(inactive);
-        UCSBSubject saveducsbSubject = UCSBSubjectRepository.save(ucsbSubject);
+        UCSBSubject saveducsbSubject = ucsbSubjectRepository.save(ucsbSubject);
         return saveducsbSubject;
+    }
+
+    @ApiOperation(value = "Get a single subject by ID")
+    // @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("")
+    public ResponseEntity<String> getUCSBSubjectById(
+            @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
+        loggingService.logMethod();
+        UCSBSubjectOrError roe = new UCSBSubjectOrError(id);
+
+        roe = doesUCSBSubjectExist(roe);
+        if (roe.error != null) {
+            return roe.error;
+        }
+
+        String body = mapper.writeValueAsString(roe.ucsbSubject);
+        return ResponseEntity.ok().body(body);
+    }
+
+    public UCSBSubjectOrError doesUCSBSubjectExist(UCSBSubjectOrError roe) {
+
+        Optional<UCSBSubject> optionalUCSBSubject = ucsbSubjectRepository.findById(roe.id);
+
+        if (optionalUCSBSubject.isEmpty()) {
+            roe.error = ResponseEntity
+                    .badRequest()
+                    .body(String.format("id %d not found", roe.id));
+        } else {
+            roe.ucsbSubject = optionalUCSBSubject.get();
+        }
+        return roe;
+    }
+
+    // FOR TASK FOUR THIS FUNCTION (EX)
+    @ApiOperation(value = "Update a single subject by ID)")
+    // @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("")
+    public ResponseEntity<String> putUCSBSubjectID(
+            @ApiParam("id") @RequestParam Long id,
+            @RequestBody @Valid UCSBSubject incomingUCSBSubject) throws JsonProcessingException {
+        loggingService.logMethod();
+
+        // CurrentUser currentUser = getCurrentUser();
+        // User user = currentUser.getUser(); (EX: I DONT THINK WE HAVE A USER ???)
+
+        UCSBSubjectOrError ucsbSubError = new UCSBSubjectOrError(id);
+
+        ucsbSubError = doesUCSBSubjectExist(ucsbSubError);
+        if (ucsbSubError.error != null) {
+            return ucsbSubError.error;
+        }
+
+        // incomingTodo.setUser(user);
+        // incomingUCSBSubject.setSubjectCode(subjectCode);
+        // incomingUCSBSubject.setSubjectTranslation(subjectTranslation);
+        // incomingUCSBSubject.setDeptCode(deptCode);
+        // incomingUCSBSubject.setCollegeCode(collegeCode);
+        // incomingUCSBSubject.setRelatedDeptCode(relatedDeptCode);
+        // incomingUCSBSubject.setInactive(inactive);
+        ucsbSubjectRepository.save(incomingUCSBSubject);
+
+        String body = mapper.writeValueAsString(incomingUCSBSubject);
+        return ResponseEntity.ok().body(body);
+    }
+
+    @ApiOperation(value = "Delete a subject by ID")
+    @DeleteMapping("")
+    public ResponseEntity<String> deleteUCSBSubject(
+            @ApiParam("id") @RequestParam Long id) {
+        loggingService.logMethod();
+
+        UCSBSubjectOrError roe = new UCSBSubjectOrError(id);
+
+        roe = doesUCSBSubjectExist(roe);
+        if (roe.error != null) {
+            return roe.error;
+        }
+
+        ucsbSubjectRepository.deleteById(id);
+        return ResponseEntity.ok().body(String.format("id %d deleted", id));
+
     }
 
 }
