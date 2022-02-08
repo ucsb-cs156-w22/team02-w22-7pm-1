@@ -125,17 +125,17 @@ public class UCSBSubjectController extends ApiController {
         return roe;
     }
 
-    //FOR TASK FOUR THIS FUNCTION (EX)
+    // FOR TASK FOUR THIS FUNCTION (EX)
     @ApiOperation(value = "Update a single subject by ID)")
-    //@PreAuthorize("hasRole('ROLE_USER')")
+    // @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("")
     public ResponseEntity<String> putUCSBSubjectID(
             @ApiParam("id") @RequestParam Long id,
             @RequestBody @Valid UCSBSubject incomingUCSBSubject) throws JsonProcessingException {
         loggingService.logMethod();
 
-        //CurrentUser currentUser = getCurrentUser();
-        //User user = currentUser.getUser();    (EX: I DONT THINK WE HAVE A USER ???)
+        // CurrentUser currentUser = getCurrentUser();
+        // User user = currentUser.getUser(); (EX: I DONT THINK WE HAVE A USER ???)
 
         UCSBSubjectOrError ucsbSubError = new UCSBSubjectOrError(id);
 
@@ -144,7 +144,7 @@ public class UCSBSubjectController extends ApiController {
             return ucsbSubError.error;
         }
 
-        //incomingTodo.setUser(user);
+        // incomingTodo.setUser(user);
         // incomingUCSBSubject.setSubjectCode(subjectCode);
         // incomingUCSBSubject.setSubjectTranslation(subjectTranslation);
         // incomingUCSBSubject.setDeptCode(deptCode);
