@@ -161,14 +161,28 @@ public class UCSBSubjectController extends ApiController {
 
         UCSBSubjectOrError roe = new UCSBSubjectOrError(id);
 
-        roe = doesUCSBSubjectExist(roe);
+        roe = doesUCSBSubjectExistOrDelete(roe);
         if (roe.error != null) {
             return roe.error;
         }
 
         ucsbSubjectRepository.deleteById(id);
-        return ResponseEntity.ok().body(String.format("id %d deleted", id));
+        return ResponseEntity.ok().body(String.format("record %d deleted", id));
 
+    }
+
+    public UCSBSubjectOrError doesUCSBSubjectExistOrDelete(UCSBSubjectOrError roe) {
+
+        Optional<UCSBSubject> optionalUCSBSubject = ucsbSubjectRepository.findById(roe.id);
+
+        if (optionalUCSBSubject.isEmpty()) {
+            roe.error = ResponseEntity
+                    .badRequest()
+                    .body(String.format("record %d not found", roe.id));
+        } else {
+            roe.ucsbSubject = optionalUCSBSubject.get();
+        }
+        return roe;
     }
 
 }
