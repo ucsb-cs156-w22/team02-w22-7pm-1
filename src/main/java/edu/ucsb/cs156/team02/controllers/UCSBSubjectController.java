@@ -51,7 +51,7 @@ public class UCSBSubjectController extends ApiController {
     ObjectMapper mapper;
 
     @ApiOperation(value = "List all UCSB Subjects")
-    // @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/all")
     public Iterable<UCSBSubject> allUCSBSubjects() {
         loggingService.logMethod();
@@ -60,7 +60,7 @@ public class UCSBSubjectController extends ApiController {
     }
 
     @ApiOperation(value = "Create a new UCSB Subject JSON Object")
-    // @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/post")
     public UCSBSubject postUCSBSubject(
             @ApiParam("subjectCode") @RequestParam String subjectCode,
@@ -90,7 +90,7 @@ public class UCSBSubjectController extends ApiController {
         return saveducsbSubject;
     }
 
-    @ApiOperation(value = "Get a single UCSBSubject")
+    @ApiOperation(value = "Get a single subject by ID")
     // @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("")
     public ResponseEntity<String> getUCSBSubjectById(
@@ -100,9 +100,9 @@ public class UCSBSubjectController extends ApiController {
 
         roe = doesUCSBSubjectExist(roe);
         if (roe.error != null) {
-
             return roe.error;
         }
+
         String body = mapper.writeValueAsString(roe.ucsbSubject);
         return ResponseEntity.ok().body(body);
     }
@@ -114,7 +114,7 @@ public class UCSBSubjectController extends ApiController {
         if (optionalUCSBSubject.isEmpty()) {
             roe.error = ResponseEntity
                     .badRequest()
-                    .body(String.format("subject with id %d not found", roe.id));
+                    .body(String.format("id %d not found", roe.id));
         } else {
             roe.ucsbSubject = optionalUCSBSubject.get();
         }
@@ -167,7 +167,7 @@ public class UCSBSubjectController extends ApiController {
         }
 
         ucsbSubjectRepository.deleteById(id);
-        return ResponseEntity.ok().body(String.format("subject with id %d deleted", id));
+        return ResponseEntity.ok().body(String.format("id %d deleted", id));
 
     }
 
