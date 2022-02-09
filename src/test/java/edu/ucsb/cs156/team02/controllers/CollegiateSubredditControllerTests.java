@@ -239,7 +239,7 @@ public class CollegiateSubredditControllerTests extends ControllerTestCase {
         // We deliberately set the user information to another user
         // This shoudl get ignored and overwritten with currrent user when todo is saved
 
-        CollegiateSubreddit updatedCollegiateSubreddit = CollegiateSubreddit.builder().name("new name").location("new name").subreddit("CollegiateSubreddit 67").id(67L).build();
+        CollegiateSubreddit updatedCollegiateSubreddit = CollegiateSubreddit.builder().name("new name").location("new name").subreddit("new sub").id(67L).build();
 
         String requestBody = mapper.writeValueAsString(updatedCollegiateSubreddit);
         String expectedReturn = mapper.writeValueAsString(updatedCollegiateSubreddit);
