@@ -88,7 +88,6 @@ public class CollegiateSubredditController extends ApiController {
 
     //get single sub by id GET
     @ApiOperation(value = "Get a single collegiate subreddit by id")
-    //@PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("")
     public ResponseEntity<String> getCollegiateSubredditById(
             @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
@@ -112,7 +111,6 @@ public class CollegiateSubredditController extends ApiController {
     
     //PUT function for single endpoint
     @ApiOperation(value = "Update a single Subbreddit")
-    ///@PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("")
     public ResponseEntity<String> putCollegiateSubredditById(
             @ApiParam("id") @RequestParam Long id,
@@ -138,6 +136,7 @@ public class CollegiateSubredditController extends ApiController {
         return ResponseEntity.ok().body(body);
     }
 
+    //delete subreddit
     @ApiOperation(value = "Delete a CollegiateSubreddit")
     @DeleteMapping("")
     public ResponseEntity<String> deleteCollegiateSubreddit(
@@ -152,52 +151,6 @@ public class CollegiateSubredditController extends ApiController {
         return ResponseEntity.ok().body(String.format("todo with id %d deleted", id));
 
     }
-
-
-//wrap end
-
-/*
-    @ApiOperation(value = "Delete a Todo owned by this user")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @DeleteMapping("")
-    public ResponseEntity<String> deleteTodo(
-            @ApiParam("id") @RequestParam Long id) {
-        CollegiateSubredditOrError toe = new CollegiateSubredditOrError(id);
-
-        toe = doesCollegiateSubredditExist(toe);
-        if (toe.error != null) {
-            return toe.error;
-        }
-
-        toe = doesCollegiateSubredditBelongToCurrentUser(toe);
-        if (toe.error != null) {
-            return toe.error;
-        }
-        todoRepository.deleteById(id);
-        return ResponseEntity.ok().body(String.format("todo with id %d deleted", id));
-
-    }
-*/
-
-/*
-    @ApiOperation(value = "Delete another user's todo")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/admin")
-    public ResponseEntity<String> deleteTodo_Admin(
-            @ApiParam("id") @RequestParam Long id) {
-        CollegiateSubredditOrError toe = new CollegiateSubredditOrError(id);
-
-        toe = doesTodoExist(toe);
-        if (toe.error != null) {
-            return toe.error;
-        }
-
-        todoRepository.deleteById(id);
-
-        return ResponseEntity.ok().body(String.format("todo with id %d deleted", id));
-
-    }
-*/
 
 
     /**
