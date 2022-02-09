@@ -121,10 +121,6 @@ public class UCSBRequirementController extends ApiController {
         }
         return roe;
     }
-
-
-
-
     //new adding 
 
     @ApiOperation(value = "Delete a UCSBRequirment owned by this user")
@@ -159,7 +155,7 @@ public class UCSBRequirementController extends ApiController {
             @RequestBody @Valid UCSBRequirement incomingUCSBReuirement) throws JsonProcessingException{
         loggingService.logMethod();
 
- 
+                
 
         UCSBRequirementOrError roe = new UCSBRequirementOrError(id);
 
@@ -169,8 +165,11 @@ public class UCSBRequirementController extends ApiController {
         }
  
 
-        //incomingTodo.setUser(user);
+        //we need to changes this if we save the date more then one time code is in ADMIN
+        incomingUCSBReuirement.setId(id);
         ucsbRequirementRepository.save(incomingUCSBReuirement);
+        
+        
 
         String body = mapper.writeValueAsString(incomingUCSBReuirement);
         return ResponseEntity.ok().body(body);
