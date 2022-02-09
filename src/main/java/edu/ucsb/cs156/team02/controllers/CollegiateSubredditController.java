@@ -148,7 +148,7 @@ public class CollegiateSubredditController extends ApiController {
             return toe.error;
         }
         colSubRepository.deleteById(id);
-        return ResponseEntity.ok().body(String.format("todo with id %d deleted", id));
+        return ResponseEntity.ok().body(String.format("collegiate subreddit with id %d deleted", id));
 
     }
 
