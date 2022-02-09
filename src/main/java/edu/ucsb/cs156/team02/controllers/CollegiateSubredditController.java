@@ -119,7 +119,7 @@ public class CollegiateSubredditController extends ApiController {
             @RequestBody @Valid CollegiateSubreddit incomingCollegiateSubreddit) throws JsonProcessingException {
             
         loggingService.logMethod();
-        
+
         CollegiateSubredditOrError toe = new CollegiateSubredditOrError(id);
 
         toe = doesCollegiateSubredditExist(toe);
@@ -138,19 +138,22 @@ public class CollegiateSubredditController extends ApiController {
         return ResponseEntity.ok().body(body);
     }
 
+    @ApiOperation(value = "Delete a CollegiateSubreddit")
+    @DeleteMapping("")
+    public ResponseEntity<String> deleteCollegiateSubreddit(
+            @ApiParam("id") @RequestParam Long id) {
+        CollegiateSubredditOrError toe = new CollegiateSubredditOrError(id);
 
-/*wrap unknown; looks like other GETs
+        toe = doesCollegiateSubredditExist(toe);
+        if (toe.error != null) {
+            return toe.error;
+        }
+        colSubRepository.deleteById(id);
+        return ResponseEntity.ok().body(String.format("todo with id %d deleted", id));
 
-    @ApiOperation(value = "List all CollegiateSubreddits")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/admin/all")
-    public Iterable<CollegiateSubreddit> allUsersCollegiateSubreddits() {
-        loggingService.logMethod();
-        Iterable<CollegiateSubreddit> colSubs = colSubRepository.findAll();
-        return colSubs;
     }
 
-*/ 
+
 //wrap end
 
 /*
@@ -196,59 +199,6 @@ public class CollegiateSubredditController extends ApiController {
     }
 */
 
-/*
-    @ApiOperation(value = "Update a single todo (if it belongs to current user)")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @PutMapping("")
-    public ResponseEntity<String> putTodoById(
-            @ApiParam("id") @RequestParam Long id,
-            @RequestBody @Valid Todo incomingTodo) throws JsonProcessingException {
-        CurrentUser currentUser = getCurrentUser();
-        User user = currentUser.getUser();
-
-        CollegiateSubredditOrError toe = new CollegiateSubredditOrError(id);
-
-        toe = doesTodoExist(toe);
-        if (toe.error != null) {
-            return toe.error;
-        }
-        toe = doesTodoBelongToCurrentUser(toe);
-        if (toe.error != null) {
-            return toe.error;
-        }
-
-        incomingTodo.setUser(user);
-        todoRepository.save(incomingTodo);
-
-        String body = mapper.writeValueAsString(incomingTodo);
-        return ResponseEntity.ok().body(body);
-    }
-*/
-/*
-    @ApiOperation(value = "Update a single collegiate subreddit (regardless of ownership, admin only, can't change ownership)")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/admin")
-    public ResponseEntity<String> putCollegiateSubredditById_admin(
-            @ApiParam("id") @RequestParam Long id,
-            @RequestBody @Valid CollegiateSubreddit incomingCollegiateSubreddit) throws JsonProcessingException {
-        CollegiateSubredditOrError toe = new CollegiateSubredditOrError(id);
-
-        toe = doesCollegiateSubredditExist(toe);
-        if (toe.error != null) {
-            return toe.error;
-        }
-
-        // Even the admin can't change the user; they can change other details
-        // but not that.
-
-        User previousUser = toe.colSub.getUser();
-        incomingCollegiateSubreddit.setUser(previousUser);
-        colSubRepository.save(incomingCollegiateSubreddit);
-
-        String body = mapper.writeValueAsString(incomingCollegiateSubreddit);
-        return ResponseEntity.ok().body(body);
-    }
-*/
 
     /**
      * Pre-conditions: toe.id is value to look up, toe.todo and toe.error are null
