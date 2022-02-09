@@ -109,7 +109,7 @@ public class CollegiateSubredditController extends ApiController {
         return ResponseEntity.ok().body(body);
     }
 
-    /* comment out for now
+    
     //PUT function for single endpoint
     @ApiOperation(value = "Update a single Subbreddit")
     ///@PreAuthorize("hasRole('ROLE_USER')")
@@ -117,7 +117,9 @@ public class CollegiateSubredditController extends ApiController {
     public ResponseEntity<String> putCollegiateSubredditById(
             @ApiParam("id") @RequestParam Long id,
             @RequestBody @Valid CollegiateSubreddit incomingCollegiateSubreddit) throws JsonProcessingException {
-
+            
+        loggingService.logMethod();
+        
         CollegiateSubredditOrError toe = new CollegiateSubredditOrError(id);
 
         toe = doesCollegiateSubredditExist(toe);
@@ -135,7 +137,6 @@ public class CollegiateSubredditController extends ApiController {
         String body = mapper.writeValueAsString(colSub);
         return ResponseEntity.ok().body(body);
     }
-*/
 
 
 /*wrap unknown; looks like other GETs
