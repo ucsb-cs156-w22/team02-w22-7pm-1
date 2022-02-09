@@ -58,7 +58,7 @@ public class CollegiateSubredditController extends ApiController {
 
 //task 2 - GET list all
     @ApiOperation(value = "List this user's collegiate subreddits")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')") comment out for now -noah
     @GetMapping("/all")
     public Iterable<CollegiateSubreddit> thisUsersCollegiateSubreddits() {
         loggingService.logMethod();
@@ -66,57 +66,9 @@ public class CollegiateSubredditController extends ApiController {
         return colSubs;
     }
 
-/*wrap unknown; looks like other GETs
-
-    @ApiOperation(value = "List all CollegiateSubreddits")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/admin/all")
-    public Iterable<CollegiateSubreddit> allUsersCollegiateSubreddits() {
-        loggingService.logMethod();
-        Iterable<CollegiateSubreddit> colSubs = colSubRepository.findAll();
-        return colSubs;
-    }
-
-    @ApiOperation(value = "Get a single collegiate subreddit (if it belongs to current user)")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("")
-    public ResponseEntity<String> getCollegiateSubredditById(
-            @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
-        CollegiateSubredditOrError toe = new CollegiateSubredditOrError(id);
-
-        toe = doesCollegiateSubredditExist(toe);
-        if (toe.error != null) {
-            return toe.error;
-        }
-        toe = doesCollegiateSubredditBelongToCurrentUser(toe);
-        if (toe.error != null) {
-            return toe.error;
-        }
-        String body = mapper.writeValueAsString(toe.colSub);
-        return ResponseEntity.ok().body(body);
-    }
-
-    @ApiOperation(value = "Get a single collegiate subreddit (no matter who it belongs to, admin only)")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/admin")
-    public ResponseEntity<String> getCollegiateSubredditById_admin(
-            @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
-        CollegiateSubredditOrError toe = new CollegiateSubredditOrError(id);
-
-        toe = doesCollegiateSubredditExist(toe);
-        if (toe.error != null) {
-            return toe.error;
-        }
-
-        String body = mapper.writeValueAsString(toe.colSub);
-        return ResponseEntity.ok().body(body);
-    }
-*/ 
-//wrap end
-
-//task 2 - POST a new
+    //task 2 - POST a new
     @ApiOperation(value = "Create a new CollegiateSubreddit")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')") comment out for now -noah
     @PostMapping("/post")
     public CollegiateSubreddit postCollegiateSubreddit(
             @ApiParam("name") @RequestParam String name,
@@ -133,6 +85,72 @@ public class CollegiateSubredditController extends ApiController {
         CollegiateSubreddit savedCollegiateSubreddit = colSubRepository.save(colSub);
         return savedCollegiateSubreddit;
     }
+
+    //get single sub by id GET
+    @ApiOperation(value = "Get a single collegiate subreddit by id")
+    //@PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("")
+    public ResponseEntity<String> getCollegiateSubredditById(
+            @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
+        CollegiateSubredditOrError toe = new CollegiateSubredditOrError(id);
+
+        loggingService.logMethod();
+
+        toe = doesCollegiateSubredditExist(toe);
+        
+        if (toe.error != null) {
+            return toe.error;
+        }
+        /*toe = doesCollegiateSubredditBelongToCurrentUser(toe); //dont need user stuff
+        if (toe.error != null) {
+            return toe.error; 
+        }*/
+        String body = mapper.writeValueAsString(toe.colSub);
+        return ResponseEntity.ok().body(body);
+    }
+
+    /* comment out for now
+    //PUT function for single endpoint
+    @ApiOperation(value = "Update a single Subbreddit")
+    ///@PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("")
+    public ResponseEntity<String> putCollegiateSubredditById(
+            @ApiParam("id") @RequestParam Long id,
+            @RequestBody @Valid CollegiateSubreddit incomingCollegiateSubreddit) throws JsonProcessingException {
+
+        CollegiateSubredditOrError toe = new CollegiateSubredditOrError(id);
+
+        toe = doesCollegiateSubredditExist(toe);
+        if (toe.error != null) {
+            return toe.error;
+        }
+
+        CollegiateSubreddit colSub = toe.colSub;
+        colSub.setName(incomingCollegiateSubreddit.getName());
+        colSub.setLocation(incomingCollegiateSubreddit.getLocation());
+        colSub.setSubreddit(incomingCollegiateSubreddit.getSubreddit());
+
+
+        colSubRepository.save(colSub);
+        String body = mapper.writeValueAsString(colSub);
+        return ResponseEntity.ok().body(body);
+    }
+*/
+
+
+/*wrap unknown; looks like other GETs
+
+    @ApiOperation(value = "List all CollegiateSubreddits")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/admin/all")
+    public Iterable<CollegiateSubreddit> allUsersCollegiateSubreddits() {
+        loggingService.logMethod();
+        Iterable<CollegiateSubreddit> colSubs = colSubRepository.findAll();
+        return colSubs;
+    }
+
+*/ 
+//wrap end
 
 /*
     @ApiOperation(value = "Delete a Todo owned by this user")
