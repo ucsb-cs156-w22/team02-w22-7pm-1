@@ -27,8 +27,5 @@ public class CollegiateSubreddit {
     private String name;
     private String location;
     private String subreddit;
-    private String title;
-    private String details;
-    private boolean done;
     
 }
